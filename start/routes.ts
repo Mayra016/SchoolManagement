@@ -10,6 +10,7 @@
 import router from '@adonisjs/core/services/router'
 import StudentController from '#controllers/StudentController'
 import Controller from '#controllers/Controller'
+import ProfesorController from '#controllers/ProfesorController'
 
 router.get('/', async () => {
   return {
@@ -28,23 +29,22 @@ router.get('/profile/:id', [Controller, 'profile'])
 // STUDENT ROUTES
 router.patch('/student/edit', [StudentController, 'edit'])
 
-router.delete('/student/delete', [StudentController, 'delete'])
+router.get('/student/cronogram/:student_id', [StudentController, 'getCronogram'])
 
-router.get('/student/cronogram', [StudentController, 'getCronogram'])
 
 // PROFESOR ROUTES
-router.patch('/professor/edit', [ProfessorController, 'edit'])
+router.patch('/professor/edit', [ProfesorController, 'edit'])
 
-router.post('/professor/create/classroom', [ProfessorController, 'createClassroom'])
+router.post('/professor/create/classroom', [ProfesorController, 'createClassroom'])
 
-router.patch('/professor/edit/classroom', [ProfessorController, 'editClassroom'])
+router.patch('/professor/edit/classroom', [ProfesorController, 'editClassroom'])
 
-router.delete('/professor/delete/classroom/:id', [ProfessorController, 'deleteClassroom'])
+router.delete('/professor/delete/classroom/:id', [ProfesorController, 'deleteClassroom'])
 
-router.get('/professor/get/classroom', [ProfessorController, 'getClassroom'])
+router.get('/professor/get/classroom/:id', [ProfesorController, 'getClassroom'])
 
-router.patch('/professor/add/student/:student_id/classroom/:classroom_id', [ProfessorController, 'addStudentToClassroom'])
+router.patch('/professor/add/student/:student_id/classroom/:classroom_id', [ProfesorController, 'addStudentToClassroom'])
 
-router.delete('/professor/remove/student/:student_id/classroom/:classroom_id', [ProfessorController, 'removeStudentFromClassroom'])
+router.delete('/professor/remove/student/:student_id/classroom/:classroom_id', [ProfesorController, 'removeStudentFromClassroom'])
 
-router.get('/professor/students-from-classroom', [ProfessorController, 'getAllStudentsFromClassroom'])
+router.get('/professor/students-from-classroom/:id', [ProfesorController, 'getAllStudentsFromClassroom'])
