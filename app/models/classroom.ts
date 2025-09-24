@@ -1,6 +1,7 @@
-import { column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
+import User from './user.js'
 
-export default class Classroom {
+export default class Classroom extends BaseModel {
     @column({isPrimary: true})
     declare id: number
 
@@ -10,8 +11,12 @@ export default class Classroom {
     @column()
     declare isAvailable: boolean
 
-    @column() 
-    declare students: number[]
+    @manyToMany(() => User, {
+        pivotTable: 'classroom_student',
+        pivotForeignKey: 'classroom_id',
+        pivotRelatedForeignKey: 'student_id',
+    })
+    declare students: any
 
     @column() 
     declare createdBy: number
