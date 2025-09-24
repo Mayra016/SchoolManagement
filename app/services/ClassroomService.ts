@@ -47,7 +47,22 @@ export default class ClassroomService {
       }  
     }
     async addStudentToClassroom(student_id: any, classroom_id: any): Promise<Object> {
-        throw new Error("Method not implemented.");
+        try {
+            await this.repository.addStudentToClassroom(student_id, classroom_id)
+            return {message: 'Student were successful added to classroom'}
+          } catch (error) {
+            if (error.status === 404) {
+              return {
+                message: 'Not found',
+                errors: error.messages,
+              }
+            } else {
+              return {
+                message: 'Unknow error',
+                errors: error.messages, 
+              }
+            }   
+        }  
     }
     async getClassroom(id: any): Promise<Classroom> {
         throw new Error("Method not implemented.");
