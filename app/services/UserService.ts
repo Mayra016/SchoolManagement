@@ -30,8 +30,24 @@ export default class UserService {
       }      
     }
 
-    async getSchedule(student_id: any): Promise<Schedule> {
-      throw new Error('Method not implemented.');
+    async getSchedule(student_id: any): Promise<Schedule|Object> {
+      try {
+        const schedule: Schedule = await this.userRepository.getSchedule(student_id)
+        return schedule
+      } catch (error) {
+        if (error.status === 404) {
+          return {
+            message: 'Schedule not found',
+            errors: error.messages,
+          }
+        } else {
+          return {
+            message: 'Unknow error',
+            errors: error.messages, 
+          }
+        }
+
+      }
     }
 
     async profile(id: any): Promise<User|Object> {

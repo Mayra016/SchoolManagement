@@ -1,12 +1,25 @@
 import db from '@adonisjs/lucid/services/db'
 import UserI from '../interfaces/UserI.js'
 import User from '#models/user'
+import Schedule from '#models/schedule'
+import Classroom from '#models/classroom'
 
 
 export default class UserRepository {
 
 
+
     public trx: any
+
+    public async getSchedule(id: any): Promise<Schedule|any> {
+        if (!this.trx) {
+            this.trx = await db.transaction()
+        }
+
+        let user: User = await User.findOrFail(id, {client: this.trx})
+
+        return new Schedule(user.fullName, user.classrooms)
+    }
 
     public async getUser(id: number): Promise<User> {
         if (!this.trx) {

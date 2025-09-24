@@ -16,7 +16,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare id: number
 
   @column()
-  declare fullName: string | null
+  declare fullName: string
 
   @column()
   declare email: string
@@ -44,7 +44,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
     pivotForeignKey: 'student_id',
     pivotRelatedForeignKey: 'classroom_id',
   })
-  public classrooms: any
+  public classrooms: Classroom[]|any
 
 
   @beforeCreate()
