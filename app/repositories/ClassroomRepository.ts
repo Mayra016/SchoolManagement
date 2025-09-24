@@ -3,7 +3,15 @@ import User from '#models/user'
 import db from '@adonisjs/lucid/services/db'
 
 export default class ClassroomRepository {
+
     public trx: any
+
+    public async getClassroom(id: any): Promise<Classroom|any> {
+        this.startIfNotPresent()
+
+        const classroom: Classroom = await Classroom.query().where('id', id).preload('students').firstOrFail()
+        return classroom
+    }
 
     public async addStudentToClassroom(student_id: any, classroom_id: any) {
         this.startIfNotPresent()
