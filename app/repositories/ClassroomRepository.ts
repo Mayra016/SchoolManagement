@@ -5,9 +5,12 @@ import ClassroomI from '../interfaces/ClassroomI.js'
 
 export default class ClassroomRepository {
 
-
-
     public trx: any
+
+    public async createClassroom(validated: ClassroomI) {
+        this.startIfNotPresent()
+        await this.trx.insertQuery().table('classroom').insert(validated)
+    }
 
     public async editClassroom(validated: ClassroomI) {
         this.startIfNotPresent() 

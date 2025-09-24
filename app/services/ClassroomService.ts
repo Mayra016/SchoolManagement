@@ -107,7 +107,7 @@ export default class ClassroomService {
             const validated: ClassroomI | any = await request.validateUsing(userValidator)
             await this.repository.editClassroom(validated)
             return {message: 'Classroom was successful edited'}
-          } catch (error) {
+        } catch (error) {
             if (error.status === 404) {
               return {
                 message: 'Not found',
@@ -122,7 +122,23 @@ export default class ClassroomService {
         }  
     }
     async createClassroom(request: Request): Promise<Object> {
-        throw new Error("Method not implemented.");
+        try {
+            const validated: ClassroomI | any = await request.validateUsing(userValidator)
+            await this.repository.createClassroom(validated)
+            return {message: 'Classroom was successful created'}
+        } catch (error) {
+            if (error.status === 404) {
+              return {
+                message: 'Not found',
+                errors: error.messages,
+              }
+            } else {
+              return {
+                message: 'Unknow error',
+                errors: error.messages, 
+              }
+            }   
+        }  
     }
     
 }
