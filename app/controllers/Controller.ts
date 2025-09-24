@@ -5,9 +5,9 @@ import { HttpContext } from "@adonisjs/core/http";
 export default class Controller {
     userService: UserService = new UserService();
 
-    public async registrate({ response, request }: HttpContext) {
+    public async register({ response, request }: HttpContext) {
         try {
-            await this.userService.registrate(request)
+            await this.userService.register(request)
             return response.status(200).json({
               message: 'Student registered successfully',
             })

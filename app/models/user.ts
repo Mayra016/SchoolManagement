@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column, beforeCreate } from '@adonisjs/lucid/orm'
+import { BaseModel, column, beforeCreate, manyToMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { Role } from '../enums/roles.js'
+import Classroom from './classroom.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -37,6 +38,14 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @column()
   declare role: Role
+
+  @manyToMany(() => Classroom, {
+    pivotTable: 'classroom_student',
+    pivotForeignKey: 'student_id',
+    pivotRelatedForeignKey: 'classroom_id',
+  })
+  public classrooms: any
+
 
   @beforeCreate()
   public static assignRegistration(user: User) {

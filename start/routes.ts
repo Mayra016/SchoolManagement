@@ -19,7 +19,7 @@ router.get('/', async () => {
 })
 
 // COMMON ROUTES
-router.post('/registrate', [Controller, 'registrate'])
+router.post('/register', [Controller, 'register'])
 
 router.delete('/delete/:id', [Controller, 'delete'])
 
