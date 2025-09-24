@@ -29,7 +29,7 @@ router.get('/profile/:id', [Controller, 'profile'])
 // STUDENT ROUTES
 router.patch('/student/edit', [StudentController, 'edit'])
 
-router.get('/student/cronogram/:student_id', [StudentController, 'getCronogram'])
+router.get('/student/cronogram/:student_id', [StudentController, 'getSchedule'])
 
 
 // PROFESOR ROUTES
