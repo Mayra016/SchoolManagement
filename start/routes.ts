@@ -43,7 +43,7 @@ router.delete('/professor/delete/classroom/:id', [ProfesorController, 'deleteCla
 
 router.get('/professor/get/classroom/:id', [ProfesorController, 'getClassroom'])
 
-router.patch('/professor/add/student/:student_id/classroom/:classroom_id', [ProfesorController, 'addStudentToClassroom'])
+router.patch('/professor/:professor_id/add/student/:student_id/classroom/:classroom_id', [ProfesorController, 'addStudentToClassroom'])
 
 router.delete('/professor/remove/student/:student_id/classroom/:classroom_id', [ProfesorController, 'removeStudentFromClassroom'])
 

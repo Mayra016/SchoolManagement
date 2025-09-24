@@ -9,7 +9,7 @@ import ClassroomI from "../interfaces/ClassroomI.js";
 export default class ClassroomService {
     repository: ClassroomRepository = new ClassroomRepository();
 
-    async getAllStudentsFromClassroom(id: any): Promise<User[]|Object> {
+    async getAllStudentsFromClassroom(id: number): Promise<User[]|Object> {
       try {
         let students = await this.repository.getAllStudents(id)
         return students
@@ -29,7 +29,7 @@ export default class ClassroomService {
       }  
     }
 
-    async removeStudentFromClassroom(student_id: any, classroom_id: any): Promise<Object> {
+    async removeStudentFromClassroom(student_id: string, classroom_id: any): Promise<Object> {
       try {
         await this.repository.removeStudentFromClassroom(student_id, classroom_id)
         return {message: 'Student were successful removed from classroom'}
@@ -48,9 +48,9 @@ export default class ClassroomService {
 
       }  
     }
-    async addStudentToClassroom(student_id: any, classroom_id: any): Promise<Object> {
+    async addStudentToClassroom(professor_id: string, student_id: string, classroom_id: any): Promise<Object> {
         try {
-            await this.repository.addStudentToClassroom(student_id, classroom_id)
+            await this.repository.addStudentToClassroom(professor_id, student_id, classroom_id)
             return {message: 'Student were successful added to classroom'}
           } catch (error) {
             if (error.status === 404) {

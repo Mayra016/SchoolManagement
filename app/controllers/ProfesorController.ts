@@ -1,3 +1,4 @@
+import Classroom from "#models/classroom";
 import Schedule from "#models/classroom";
 import User from "#models/user";
 import ClassroomService from "#services/ClassroomService";
@@ -71,7 +72,7 @@ export default class ProfesorController {
 
     public async getClassroom({ params, response }: HttpContext) {
         try {
-          let classroom: Schedule = await this.classroomService.getClassroom(params.id)
+          let classroom: Classroom|Object = await this.classroomService.getClassroom(params.id)
           return response.status(200).json({
             classroom,
           })
@@ -87,7 +88,7 @@ export default class ProfesorController {
 
     public async addStudentToClassroom({ params, response }: HttpContext) {
         try {
-          await this.classroomService.addStudentToClassroom(params.student_id, params.classroom_id)
+          await this.classroomService.addStudentToClassroom(params.professor_id, params.student_id, params.classroom_id)
           return response.status(200).json({
             message: 'Success adding user: ' + params.student_id + ' in the classroom: ' + params.classroom_id,
           })
@@ -117,7 +118,7 @@ export default class ProfesorController {
 
     public async getAllStudentsFromClassroom({ params, response }: HttpContext) {
         try {
-          let students: User[] = await this.classroomService.getAllStudentsFromClassroom(params.id)
+          let students: User[]|Object = await this.classroomService.getAllStudentsFromClassroom(params.id)
           return response.status(200).json({
             students,
           })
