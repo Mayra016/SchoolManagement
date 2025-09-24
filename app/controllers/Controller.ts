@@ -7,7 +7,7 @@ export default class Controller {
 
     public async registrate({ response, request }: HttpContext) {
         try {
-            this.userService.registrate(request)
+            await this.userService.registrate(request)
             return response.status(200).json({
               message: 'Student registered successfully',
             })
@@ -21,7 +21,7 @@ export default class Controller {
 
     public async delete({ response, params }: HttpContext) {
         try {
-            this.userService.delete(params.id);
+            await this.userService.delete(params.id);
             return response.status(200).json({
               message: 'Success deleting user',
             })
@@ -31,6 +31,7 @@ export default class Controller {
                 message: 'Error deleting user',
               })
         }
+        
     }   
 
     public async profile({ response, params }: HttpContext) {
