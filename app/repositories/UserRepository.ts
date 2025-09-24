@@ -2,13 +2,9 @@ import db from '@adonisjs/lucid/services/db'
 import UserI from '../interfaces/UserI.js'
 import User from '#models/user'
 import Schedule from '#models/schedule'
-import Classroom from '#models/classroom'
 
 
 export default class UserRepository {
-
-
-
     public trx: any
 
     public async getSchedule(id: any): Promise<Schedule|any> {

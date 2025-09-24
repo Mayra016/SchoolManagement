@@ -33,12 +33,15 @@ export default class ClassroomRepository {
         return classroom
     }
 
-    public async addStudentToClassroom(student_id: string, classroom_id: any) {
+    public async addStudentToClassroom(classroom: Classroom, student_id: string) {
         this.startIfNotPresent()
 
-        const classroom: Classroom = await Classroom.query().where('id', classroom_id).preload('students').firstOrFail()
-
         await classroom.related('students').attach([student_id])
+        if (classroom.students.length == classroom.maxCapacity) {
+            classroom.isAvailable = false            
+        }
+        await this.trx.insertQuery().table('classroom').insert(classroom).onConflict('id').merge()
+        
     }
 
     public async removeStudentFromClassroom(student_id: string, classroom_id: any) {
@@ -48,7 +51,7 @@ export default class ClassroomRepository {
         await classroom.related('students').detach([student_id])
     }
 
-    public async getAllStudents(id: any) {
+    public async getAllStudents(id: number): Promise<User[]|any> {
         this.startIfNotPresent()
 
         const classroom: Classroom = await Classroom.query().where('id', id).preload('students').firstOrFail()

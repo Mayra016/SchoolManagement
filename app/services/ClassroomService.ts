@@ -48,10 +48,36 @@ export default class ClassroomService {
 
       }  
     }
+
     async addStudentToClassroom(professor_id: string, student_id: string, classroom_id: any): Promise<Object> {
         try {
-            await this.repository.addStudentToClassroom(professor_id, student_id, classroom_id)
-            return {message: 'Student were successful added to classroom'}
+            const classroom: Classroom|Object = this.repository.getClassroom(classroom_id)
+
+            if (classroom instanceof Classroom) {
+                if (classroom.createdBy !== professor_id) {
+                    return {message: "You can't add a student to a classroom that you have not created"}
+                }
+                const isStudentAlreadyIn = classroom.students.find((x: User) => x.id === student_id)
+
+                if (isStudentAlreadyIn) {
+                    return {message: 'User already in this classroom'}
+                }
+
+                if (!classroom.isAvailable) {
+                    return {message: 'This classroom is not available'}
+                }
+
+                if (classroom.students.length < classroom.maxCapacity) {
+                    this.repository.addStudentToClassroom(classroom, student_id)
+            
+                    return {message: 'Student were successful added to classroom'}
+                } else {
+                    return {message: 'Max capaciy reached'}
+                }
+            } else {
+                return {message: 'Error adding student to classroom'}
+            }
+            
           } catch (error) {
             if (error.status === 404) {
               return {
