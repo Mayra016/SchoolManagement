@@ -4,7 +4,17 @@ import db from '@adonisjs/lucid/services/db'
 
 export default class ClassroomRepository {
 
+
     public trx: any
+
+    public async deleteClassroom(id: number) {
+        this.startIfNotPresent()
+
+        const classroom: Classroom = await Classroom.query().where('id', id).preload('students').firstOrFail()
+        const studentIds: string[] = classroom.students.map((s: User) => s.id)
+
+        await classroom.related('students').detach(studentIds)
+    }
 
     public async getClassroom(id: any): Promise<Classroom|any> {
         this.startIfNotPresent()
@@ -13,16 +23,15 @@ export default class ClassroomRepository {
         return classroom
     }
 
-    public async addStudentToClassroom(student_id: any, classroom_id: any) {
+    public async addStudentToClassroom(student_id: string, classroom_id: any) {
         this.startIfNotPresent()
 
         const classroom: Classroom = await Classroom.query().where('id', classroom_id).preload('students').firstOrFail()
-        const user: User = await User.query().where('id', student_id).firstOrFail()
 
-        await classroom.related('students').attach([user])
+        await classroom.related('students').attach([student_id])
     }
 
-    public async removeStudentFromClassroom(student_id: any, classroom_id: any) {
+    public async removeStudentFromClassroom(student_id: string, classroom_id: any) {
         this.startIfNotPresent()
 
         const classroom: Classroom = await Classroom.query().where('id', classroom_id).preload('students').firstOrFail()

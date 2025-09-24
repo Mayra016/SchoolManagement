@@ -83,7 +83,22 @@ export default class ClassroomService {
         }  
     }
     async deleteClassroom(id: any): Promise<Object> {
-        throw new Error("Method not implemented.");
+        try {
+            await this.repository.deleteClassroom(id)
+            return {message: 'Classroom was successful deleted'}
+          } catch (error) {
+            if (error.status === 404) {
+              return {
+                message: 'Not found',
+                errors: error.messages,
+              }
+            } else {
+              return {
+                message: 'Unknow error',
+                errors: error.messages, 
+              }
+            }   
+        }  
     }
     async editClassroom(request: Request): Promise<Object> {
         throw new Error("Method not implemented.");
