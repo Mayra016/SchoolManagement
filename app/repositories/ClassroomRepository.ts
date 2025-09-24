@@ -1,11 +1,18 @@
 import Classroom from '#models/classroom'
 import User from '#models/user'
 import db from '@adonisjs/lucid/services/db'
+import ClassroomI from '../interfaces/ClassroomI.js'
 
 export default class ClassroomRepository {
 
 
+
     public trx: any
+
+    public async editClassroom(validated: ClassroomI) {
+        this.startIfNotPresent() 
+        await this.trx.insertQuery().table('classroom').insert(validated).onConflict('id').merge()
+    }
 
     public async deleteClassroom(id: number) {
         this.startIfNotPresent()

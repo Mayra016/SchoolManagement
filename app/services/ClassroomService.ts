@@ -1,7 +1,9 @@
 import Classroom from "#models/classroom";
 import User from "#models/user";
 import { Request } from "@adonisjs/http-server";
+import { userValidator } from "#validators/UserValidator";
 import ClassroomRepository from "../repositories/ClassroomRepository.js";
+import ClassroomI from "../interfaces/ClassroomI.js";
 
 
 export default class ClassroomService {
@@ -101,7 +103,23 @@ export default class ClassroomService {
         }  
     }
     async editClassroom(request: Request): Promise<Object> {
-        throw new Error("Method not implemented.");
+        try {
+            const validated: ClassroomI | any = await request.validateUsing(userValidator)
+            await this.repository.editClassroom(validated)
+            return {message: 'Classroom was successful edited'}
+          } catch (error) {
+            if (error.status === 404) {
+              return {
+                message: 'Not found',
+                errors: error.messages,
+              }
+            } else {
+              return {
+                message: 'Unknow error',
+                errors: error.messages, 
+              }
+            }   
+        }  
     }
     async createClassroom(request: Request): Promise<Object> {
         throw new Error("Method not implemented.");

@@ -19,6 +19,6 @@ export default class Classroom extends BaseModel {
     declare students: any
 
     @column() 
-    declare createdBy: number
+    declare createdBy: string
 
 }
