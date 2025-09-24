@@ -6,6 +6,9 @@ export default class Classroom extends BaseModel {
     declare id: number
 
     @column()
+    declare num: number
+
+    @column()
     declare maxCapacity: number
 
     @column()
