@@ -8,29 +8,112 @@ export default class ClassroomRepository {
     public trx: any
 
     public async createClassroom(validated: ClassroomI) {
-        this.startIfNotPresent()
-        await this.trx.insertQuery().table('classroom').insert(validated)
+       let transactionStarted = false
+
+       try {
+            this.startIfNotPresent()
+            transactionStarted = true
+            const classroom: Classroom = await Classroom.create({
+                num: validated.num,
+                maxCapacity: validated.maxCapacity,
+                createdBy: validated.createdBy               
+            })
+
+            if (transactionStarted) {
+                await this.trx.commit()
+            }
+
+            return classroom
+       }
+        catch (error) {
+            if (this.trx && transactionStarted) {
+            await this.trx.rollback()
+            }
+            throw error
+        }
     }
 
+
     public async editClassroom(validated: ClassroomI) {
-        this.startIfNotPresent() 
-        await this.trx.insertQuery().table('classroom').insert(validated).onConflict('id').merge()
+        let transactionStarted = false
+
+        try {
+            this.startIfNotPresent()
+            transactionStarted = true
+            if (validated.id) {
+                let classroom: Classroom = await Classroom.query().where('id', validated.id).firstOrFail()
+        
+                classroom.num = validated.num
+                classroom.maxCapacity = validated.maxCapacity
+                classroom.isAvailable = validated.isAvailable ? validated.isAvailable : classroom.isAvailable
+        
+                await classroom.useTransaction(this.trx).save()
+
+                if (transactionStarted) {
+                    await this.trx.commit()
+                }
+
+                return classroom
+            }
+        }
+        catch (error) {
+            if (this.trx && transactionStarted) {
+            await this.trx.rollback()
+            }
+            throw error
+        }
     }
 
     public async deleteClassroom(id: number) {
-        this.startIfNotPresent()
+        let transactionStarted = false
 
-        const classroom: Classroom = await Classroom.query().where('id', id).preload('students').firstOrFail()
-        const studentIds: string[] = classroom.students.map((s: User) => s.id)
+        try {
+            this.startIfNotPresent()
+            transactionStarted = true 
 
-        await classroom.related('students').detach(studentIds)
+            const classroom: Classroom = await Classroom.query().where('id', id).preload('students').firstOrFail()
+            const studentIds: string[] = classroom.students.map((s: User) => s.id)
+
+            await classroom.related('students').detach(studentIds)
+
+            await Classroom.query().where('id', id).delete()
+        
+            if (transactionStarted) {
+                await this.trx.commit()
+            }
+
+            return {message: 'Classroom was successful deleted'}
+        }
+        catch (error) {
+            if (this.trx && transactionStarted) {
+                await this.trx.rollback()
+            }
+            throw error
+        }        
+            
     }
 
-    public async getClassroom(id: any): Promise<Classroom|any> {
-        this.startIfNotPresent()
+    public async getClassroom(id: any): Promise<Classroom> {
+        let transactionStarted = false
 
-        const classroom: Classroom = await Classroom.query().where('id', id).preload('students').firstOrFail()
-        return classroom
+        try {
+            this.startIfNotPresent()
+            transactionStarted = true
+
+            const classroom: Classroom = await Classroom.query().where('id', id).preload('students').firstOrFail()
+            
+            if (transactionStarted) {
+                await this.trx.commit()
+            }
+
+            return classroom
+        }
+        catch (error) {
+            if (this.trx && transactionStarted) {
+                await this.trx.rollback()
+            }
+            throw error
+        }  
     }
 
     public async addStudentToClassroom(classroom: Classroom, student_id: string) {
@@ -40,14 +123,17 @@ export default class ClassroomRepository {
         if (classroom.students.length == classroom.maxCapacity) {
             classroom.isAvailable = false            
         }
-        await this.trx.insertQuery().table('classroom').insert(classroom).onConflict('id').merge()
+        await classroom.useTransaction(this.trx).save()
         
     }
 
-    public async removeStudentFromClassroom(student_id: string, classroom_id: any) {
+    public async removeStudentFromClassroom(student_id: string, classroom_id: number) {
         this.startIfNotPresent()
-
+        
         const classroom: Classroom = await Classroom.query().where('id', classroom_id).preload('students').firstOrFail()
+        if (classroom.students.length < classroom.maxCapacity && classroom.isAvailable === false) {
+            classroom.isAvailable = true            
+        }
         await classroom.related('students').detach([student_id])
     }
 
