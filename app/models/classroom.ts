@@ -1,4 +1,4 @@
-import { BaseModel, column, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, column, manyToMany } from '@adonisjs/lucid/orm'
 import User from './user.js'
 
 export default class Classroom extends BaseModel {
@@ -23,5 +23,10 @@ export default class Classroom extends BaseModel {
 
     @column() 
     declare createdBy: string
+
+    @beforeCreate()
+    public static initialize(classroom: Classroom) {
+        classroom.isAvailable = true
+    }
 
 }
