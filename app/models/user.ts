@@ -34,8 +34,8 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare registration: number
 
-  @column.dateTime()
-  declare birthday: DateTime
+  @column()
+  declare birthday: string
 
   @column()
   declare role: Role

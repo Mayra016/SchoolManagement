@@ -4,7 +4,6 @@ import User from '#models/user'
 import Schedule from '#models/schedule'
 import { DateTime } from 'luxon'
 import ScheduleI from '../interfaces/ScheduleI.js'
-import Classroom from '#models/classroom'
 import ExceptionHandler from '#exceptions/Exception'
 
 export default class UserRepository {
@@ -23,15 +22,15 @@ export default class UserRepository {
 
             const user = await User.query().where('id', id).preload('classrooms').first()
 
-            if (!user) throw new ExceptionHandler(404, 'User not found')
+            if (!user) throw new ExceptionHandler(404, 'Student not found')
         
 
             let classroomInfos: ScheduleI[] = []
             
             for (let i = 0; i < user.classrooms.length; i++) {
-                const professor = await User.query().where('id', user.classrooms[i].createdBy).firstOrFail()
+                const professor = await User.query().where('id', user.classrooms[i].createdBy).first()
                 
-                if (!professor) return "Professor not found"
+                if (!professor)  throw new ExceptionHandler(404, 'Professor not found')
 
                 const classroominfo: ScheduleI = {
                     professorName: professor.fullName,
@@ -143,7 +142,7 @@ export default class UserRepository {
             const dt = DateTime.fromISO(newUser.birthday)
             birthday = dt.isValid ? dt.toSQLDate() : undefined
           }
-      
+
           let user: User = await User.create({
               fullName: newUser.fullName,
               email: newUser.email,

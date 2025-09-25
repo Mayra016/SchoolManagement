@@ -10,9 +10,9 @@ export default class StudentController {
 
     public async edit({ request, response }: HttpContext) {
       try {
-        await this.userService.edit(request)
+        let message: Object = await this.userService.edit(request)
         return response.status(200).json({
-          message: 'Success editing user',
+          message
         })
       }
       catch(e: any) {
@@ -24,7 +24,7 @@ export default class StudentController {
 
     public async getSchedule({ params, response }: HttpContext) {
       try {
-        let schedule: Schedule = await this.userService.getSchedule(params.student_id)
+        let schedule: Schedule|Object = await this.userService.getSchedule(params.student_id)
         return response.status(200).json({
           schedule
         })       

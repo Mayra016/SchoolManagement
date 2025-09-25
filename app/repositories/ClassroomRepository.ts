@@ -2,6 +2,7 @@ import Classroom from '#models/classroom'
 import User from '#models/user'
 import db from '@adonisjs/lucid/services/db'
 import ClassroomI from '../interfaces/ClassroomI.js'
+import ExceptionHandler from '#exceptions/Exception'
 
 export default class ClassroomRepository {
 
@@ -54,6 +55,8 @@ export default class ClassroomRepository {
                 }
 
                 return classroom
+            } else {
+                 throw new ExceptionHandler(400, 'Classroom not found')
             }
         }
         catch (error) {
@@ -81,8 +84,6 @@ export default class ClassroomRepository {
             if (transactionStarted) {
                 await this.trx.commit()
             }
-
-            return {message: 'Classroom was successful deleted'}
         }
         catch (error) {
             if (this.trx && transactionStarted) {

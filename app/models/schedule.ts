@@ -1,5 +1,4 @@
 import ScheduleI from "../interfaces/ScheduleI.js"
-import Classroom from "./classroom.js"
 
 
 export default class Schedule {

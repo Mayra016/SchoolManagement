@@ -1,5 +1,4 @@
 import Classroom from "#models/classroom";
-import Schedule from "#models/classroom";
 import User from "#models/user";
 import ClassroomService from "#services/ClassroomService";
 import UserService from "#services/UserService";
@@ -13,9 +12,9 @@ export default class ProfesorController {
 
     public async edit({ request, response }: HttpContext) {
       try {
-        await this.userService.edit(request)
+        const message: Object = await this.userService.edit(request)
         return response.status(200).json({
-          message: 'Success editing user',
+          message
         })
       }
       catch(e: any) {
@@ -27,9 +26,9 @@ export default class ProfesorController {
     
     public async createClassroom({ request, response }: HttpContext) {
         try {
-          await this.classroomService.createClassroom(request)
+          const message: Object = await this.classroomService.createClassroom(request)
           return response.status(200).json({
-            message: 'Success creating clasroom',
+            message
           })
         }
         catch(e: any) {
@@ -42,9 +41,9 @@ export default class ProfesorController {
     
     public async editClassroom({ request, response }: HttpContext) {
       try {
-        await this.classroomService.editClassroom(request)
+        const message: Object = await this.classroomService.editClassroom(request)
         return response.status(200).json({
-          message: 'Success editing classroom',
+          message
         })
       }
       catch(e: any) {
@@ -57,9 +56,9 @@ export default class ProfesorController {
 
     public async deleteClassroom({ params, response }: HttpContext) {
         try {
-          await this.classroomService.deleteClassroom(params.id)
+          const message: Object = await this.classroomService.deleteClassroom(params.id)
           return response.status(200).json({
-            message: 'Success deleting classroom',
+            message
           })
         }
         catch(e: any) {
@@ -88,9 +87,9 @@ export default class ProfesorController {
 
     public async addStudentToClassroom({ params, response }: HttpContext) {
         try {
-          await this.classroomService.addStudentToClassroom(params.professor_id, params.student_id, params.classroom_id)
+          const message: Object = await this.classroomService.addStudentToClassroom(params.professor_id, params.student_id, params.classroom_id)
           return response.status(200).json({
-            message: 'Success adding user: ' + params.student_id + ' in the classroom: ' + params.classroom_id,
+            message
           })
         }
         catch(e: any) {
@@ -103,9 +102,9 @@ export default class ProfesorController {
 
     public async removeStudentFromClassroom({ params, response }: HttpContext) {
         try {
-          await this.classroomService.removeStudentFromClassroom(params.student_id, params.classroom_id)
+          const message: Object = await this.classroomService.removeStudentFromClassroom(params.student_id, params.classroom_id)
           return response.status(200).json({
-            message: 'Success removing user: ' + params.student_id + ' in the classroom: ' + params.classroom_id,
+            message
           })
         }
         catch(e: any) {
