@@ -1,8 +1,9 @@
-import User from "#models/user";
+
 
 export default interface ClassroomI {
-    id: number|null,
+    id?: number,
+    num: number
     maxCapacity: number,
-    isAvailable: boolean,
+    isAvailable?: boolean,
     createdBy: string
 }
